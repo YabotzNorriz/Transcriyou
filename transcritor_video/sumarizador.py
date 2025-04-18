@@ -1,6 +1,7 @@
 import re
 from youtube_transcript_api import YouTubeTranscriptApi
 from transformers import pipeline
+import transcritor_video.conversor as conversor
 
 
 class VideoSummarizer:
@@ -70,5 +71,7 @@ class VideoSummarizer:
             self.write_output(markdown_content)
 
             print(f"Resumo salvo no arquivo '{self.output}'")
+            return self.output
         except Exception as e:
             print("Erro:", e)
+            return ""
