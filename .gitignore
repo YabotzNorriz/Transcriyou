@@ -1,0 +1,8 @@
+# ignorando ambiente virtual
+.venv
+
+# Ignorando pycache
+transcritor_video/__pycache__
+
+# Ignorando saída de testes
+resumo.md
