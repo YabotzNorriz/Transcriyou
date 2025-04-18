@@ -1,7 +1,6 @@
 import re
 from youtube_transcript_api import YouTubeTranscriptApi
 from transformers import pipeline
-import transcritor_video.conversor as conversor
 
 
 class VideoSummarizer:
