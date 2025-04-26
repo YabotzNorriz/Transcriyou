@@ -8,12 +8,11 @@ from openai import OpenAI
 class YouTubeSummarizer:
     def __init__(self, api_key: str):
         self.client = OpenAI(api_key=api_key, timeout=30, max_retries=5)
-        self.model = "gpt-3.5-turbo"
+        self.model = "gpt-3.5-turbo-instruct"
         self.max_tokens = 3000
         self.temperature = 0.3
 
     def extract_video_id(self, url: str) -> str:
-        """Extract YouTube video ID from various URL formats"""
         patterns = [
             r"(?:v=|\/)([0-9A-Za-z_-]{11})",
             r"(?:be\/|shorts\/)([0-9A-Za-z_-]{11})",
@@ -23,16 +22,16 @@ class YouTubeSummarizer:
             match = re.search(pattern, url)
             if match:
                 return match.group(1)
-        raise ValueError("Invalid YouTube URL. Please provide a valid URL.")
+        raise ValueError("URL Inválida")
 
     def get_transcript(self, video_id: str) -> str:
         try:
             transcript = YouTubeTranscriptApi.get_transcript(video_id)
             return " ".join([entry["text"] for entry in transcript])
         except (TranscriptsDisabled, NoTranscriptFound):
-            raise Exception("This video does not have a transcript available.")
+            raise Exception("Esse vídeo não tem uma transcrição")
         except Exception as e:
-            raise Exception(f"Error fetching transcript: {str(e)}")
+            raise Exception(f"Erro ao adquirir transcrição: {str(e)}")
 
     def truncate_text(self, text: str) -> str:
         encoding = tiktoken.encoding_for_model(self.model)
@@ -40,7 +39,7 @@ class YouTubeSummarizer:
         if len(tokens) > self.max_tokens:
             tokens = tokens[: self.max_tokens]
             truncated_text = encoding.decode(tokens)
-            print(f"Transcript truncated to {self.max_tokens} tokens.")
+            print(f"Transcrição truncado para {self.max_tokens} tokens.")
             return truncated_text
         return text
 
@@ -51,7 +50,7 @@ class YouTubeSummarizer:
                 messages=[
                     {
                         "role": "system",
-                        "content": "Você é uma assistente que ajuda a fazer sumarios de vídeos",
+                        "content": "Você é uma assistente que ajuda a fazer sumários de vídeos",
                     },
                     {
                         "role": "user",

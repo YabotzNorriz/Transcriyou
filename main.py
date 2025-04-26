@@ -3,8 +3,23 @@ from getpass import getpass
 from transcritor_video import sumarizador
 
 
+def read_api_key(file_path="api_key.txt"):
+    try:
+        with open(file_path, "r") as file:
+            key = file.readline().strip()
+            if key.startswith("sk-") and len(key) > 40:
+                return key
+            raise ValueError("API Key inválida")
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            f"Arquivo com a API não foi encontrado no caminho {file_path}"
+        )
+    except Exception as e:
+        raise RuntimeError(f"Erro lendo aAPI key: {str(e)}")
+
+
 def main():
-    api_key = os.getenv("") or getpass("Enter your OpenAI API key: ")
+    api_key = read_api_key() or getpass("Enter your OpenAI API key: ")
 
     summarizer = sumarizador.YouTubeSummarizer(api_key)
 
