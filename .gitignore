@@ -7,6 +7,10 @@ transcritor_video/__pycache__
 # Ignorando saída de testes
 resumo.md
 
+# Ignorando a API da openai
 api_key.txt
 
-tests
+# Ignorando os arquivos de áudio de teste
+audio
+
+audio.wav
